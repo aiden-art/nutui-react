@@ -1,0 +1,3594 @@
+# NutUI React - AI Assistant Guide
+
+## Project Overview
+
+NutUI React is a JD-style lightweight mobile React component library developed by JDCFE (JD.com Front-End Team). It supports both H5 and Mini Program development with a single codebase.
+
+**Version**: 3.0.18
+**License**: MIT
+**Repository**: https://github.com/jdf2e/nutui-react
+**Official Site**: https://nutui.jd.com/react/
+**Package Name**: @nutui/nutui-react (H5) / @nutui/nutui-react-taro (Mini Program)
+
+### Key Features
+
+- 🚀 **70+ High-Quality Components** - Cover mainstream mobile scenarios
+- 📖 **JD APP 11.0 Design System** - Based on JD's visual specifications
+- 🍭 **Tree Shaking Support** - Import components on demand
+- 💪 **TypeScript Support** - Fully typed with excellent type definitions
+- 🍭 **Theme Customization** - Support custom themes (default, jmapp, jrkf, dark mode)
+- 🌍 **Internationalization** - Multi-language support (zh-CN, zh-TW, en-US, id-ID, tr-TR)
+- 🍭 **90%+ Test Coverage** - Ensures stability and reliability
+- 📱 **Cross-Platform** - H5 + Mini Program (WeChat, JD, Alipay, etc.) via Taro
+
+### Component Structure
+
+```
+src/packages/
+├── [component-name]/
+│   ├── [component].tsx          # H5 implementation
+│   ├── [component].taro.tsx     # Taro implementation (if different)
+│   ├── [component].scss         # Component styles
+│   ├── doc.md                   # Chinese documentation
+│   ├── doc.en-US.md            # English documentation
+│   ├── demos/
+│   │   ├── h5/                 # H5 demo examples
+│   │   │   └── demo*.tsx
+│   │   └── taro/               # Taro demo examples
+│   │       └── demo*.tsx
+│   └── index.ts                # Export entry
+```
+
+## Installation & Setup
+
+### Install Package
+
+```bash
+# For H5 Projects
+pnpm add @nutui/nutui-react
+# or
+npm install @nutui/nutui-react
+# or
+yarn add @nutui/nutui-react
+
+# For Taro (Mini Program) Projects
+# Package name is same, but usage differs
+```
+
+### Basic Usage
+
+#### Method 1: Full Import (Recommended for Beginners)
+
+```tsx
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+// Import all styles
+import '@nutui/nutui-react/dist/style.css'
+// For other themes:
+// import '@nutui/nutui-react/dist/style-jmapp.css'
+// import '@nutui/nutui-react/dist/style-jrkf.css'
+
+import { Button, Input, Cell } from '@nutui/nutui-react'
+
+function App() {
+  return (
+    <div>
+      <Button type="primary">Click Me</Button>
+      <Input placeholder="Enter text" />
+    </div>
+  )
+}
+```
+
+#### Method 2: Manual On-Demand Import
+
+```tsx
+// Import specific component and its styles
+import '@nutui/nutui-react/dist/es/packages/button/style'
+import Button from '@nutui/nutui-react/dist/es/packages/button'
+
+// Don't forget to import global theme file in entry file:
+import '@nutui/nutui-react/dist/styles/themes/default.css'
+```
+
+#### Method 3: Automatic On-Demand (Vite)
+
+Install plugin:
+```bash
+pnpm add vite-plugin-imp -D
+```
+
+Configure vite.config.js:
+```js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import vitePluginImp from 'vite-plugin-imp'
+
+export default defineConfig({
+  plugins: [
+    react(),
+    vitePluginImp({
+      libList: [
+        {
+          libName: '@nutui/nutui-react',
+          style: (name) => {
+            // For CSS
+            return `@nutui/nutui-react/dist/es/packages/${name.toLowerCase()}/style/css`
+            // For SCSS
+            // return `@nutui/nutui-react/dist/es/packages/${name.toLowerCase()}/style`
+          },
+          replaceOldImport: false,
+          camel2DashComponentName: false,
+        },
+      ],
+    }),
+  ],
+})
+```
+
+Entry file (app.js):
+```tsx
+import '@nutui/nutui-react/dist/styles/themes/default.css'
+```
+
+## Component Categories & Usage
+
+### Component List by Category
+
+#### 1. Base Components (基础组件)
+- **Button** - Buttons with various types, sizes, and states
+- **Cell / CellGroup** - List items with icons, descriptions
+- **ConfigProvider** - Global configuration (theme, locale)
+- **Icon** - IconFont-based icon set
+- **Image** - Enhanced image component with loading/error states
+- **Overlay** - Mask layer for preventing user interaction
+
+#### 2. Layout Components (布局组件)
+- **Divider** - Content divider
+- **Grid / GridItem** - Grid layout for icons or content
+- **Layout / Row / Col** - Responsive grid layout system
+- **SafeArea** - Safe area adaptation for notched screens
+- **Space** - Spacing between elements
+- **Sticky** - Sticky positioning (CSS position: sticky)
+
+#### 3. Navigation Components (导航组件)
+- **BackTop** - Back to top button
+- **Elevator** - Alphabet index for quick list navigation
+- **FixedNav** - Fixed navigation menu
+- **HoverButton / HoverButtonItem** - Floating action buttons
+- **NavBar** - Top navigation bar
+- **SideBar / SideBarItem** - Sidebar navigation
+- **Tabbar / TabbarItem** - Bottom tab bar navigation
+- **Tabs / TabPane** - Tab switching component
+
+#### 4. Data Entry Components (数据录入)
+- **Address** - Address picker (province/city/district)
+- **Calendar / CalendarCard** - Date picker with various modes
+- **Cascader** - Cascading selector for hierarchical data
+- **Checkbox / CheckboxGroup** - Multiple selection
+- **DatePicker / DatePickerView** - Date and time picker
+- **Form / FormItem** - Form with validation
+- **Input** - Text input with formatting and validation
+- **InputNumber** - Numeric input with increment/decrement
+- **Menu / MenuItem** - Dropdown menu
+- **NumberKeyboard** - Numeric keyboard
+- **Picker / PickerView** - General purpose picker
+- **Radio / RadioGroup** - Single selection
+- **Range** - Range slider
+- **Rate** - Star rating
+- **SearchBar** - Search input with actions
+- **ShortPassword** - Password input for security
+- **Signature** - Canvas-based signature component
+- **Switch** - Toggle switch
+- **TextArea** - Multi-line text input
+- **Uploader** - File/image uploader
+
+#### 5. Feedback Components (操作反馈)
+- **ActionSheet** - Bottom action menu
+- **Badge** - Badge for notifications
+- **Dialog** - Modal dialog
+- **Drag** - Draggable elements
+- **Empty** - Empty state placeholder
+- **InfiniteLoading** - Infinite scroll loading
+- **Loading** - Loading spinner
+- **NoticeBar** - Scrolling notice bar
+- **Notify** - Top notification message
+- **Popover** - Popover tooltip
+- **Popup** - Popup layer (bottom/top/center/left/right)
+- **PullToRefresh** - Pull to refresh
+- **ResultPage** - Result feedback page
+- **Skeleton** - Skeleton screen for loading states
+- **Swipe** - Swipeable action buttons
+- **Toast** - Toast message
+
+#### 6. Display Components (展示组件)
+- **Animate** - CSS animations
+- **AnimatingNumbers** - Animated number transitions
+- **Audio** - Audio player (H5 only)
+- **Avatar / AvatarGroup** - Avatar display
+- **CircleProgress** - Circular progress bar
+- **Collapse / CollapseItem** - Collapsible panels
+- **CountDown** - Countdown timer
+- **Ellipsis** - Text ellipsis with expand
+- **ImagePreview** - Image preview/gallery
+- **Indicator** - Step indicator
+- **Lottie** - Lottie animation player
+- **Pagination** - Pagination component
+- **Price** - Price display with formatting
+- **Progress** - Progress bar
+- **Segmented** - Segmented control
+- **Steps / Step** - Step-by-step navigation
+- **Swiper / SwiperItem** - Carousel/swiper
+- **Table** - Data table
+- **Tag** - Tag labels
+- **Tour** - User guide tour
+- **Video** - Video player
+- **VirtualList** - Virtual scrolling list
+
+#### 7. Business Components (特色组件)
+- **AvatarCropper** - Avatar cropping tool
+- **Barrage** - Bullet screen/danmaku
+- **Card** - Product card
+- **TimeSelect** - Delivery time selector
+- **TrendArrow** - Trend arrow with percentage
+- **WaterMark** - Watermark overlay
+
+## Detailed Component Usage Guide
+
+### 📱 Base Components
+
+#### 1. Button - 按钮组件
+
+**Import**
+```tsx
+import { Button } from '@nutui/nutui-react'
+```
+
+**Complete Example**
+```tsx
+import React from 'react'
+import { Button } from '@nutui/nutui-react'
+import { Heart, Star } from '@nutui/icons-react'
+
+function ButtonDemo() {
+  const handleClick = () => {
+    console.log('Button clicked!')
+  }
+
+  return (
+    <div>
+      {/* Button Types */}
+      <Button type="primary">Primary</Button>
+      <Button type="info">Info</Button>
+      <Button type="success">Success</Button>
+      <Button type="warning">Warning</Button>
+      <Button type="danger">Danger</Button>
+      <Button type="default">Default</Button>
+
+      {/* Button Sizes */}
+      <Button size="xlarge">Extra Large</Button>
+      <Button size="large">Large</Button>
+      <Button size="normal">Normal</Button>
+      <Button size="small">Small</Button>
+      <Button size="mini">Mini</Button>
+
+      {/* Fill Modes */}
+      <Button fill="solid" type="primary">Solid</Button>
+      <Button fill="outline" type="primary">Outline</Button>
+      <Button fill="dashed" type="primary">Dashed</Button>
+      <Button fill="none" type="primary">None</Button>
+
+      {/* Button Shape */}
+      <Button shape="round">Round</Button>
+      <Button shape="square">Square</Button>
+
+      {/* With Icon */}
+      <Button icon={<Heart />} type="primary">Like</Button>
+      <Button type="primary" rightIcon={<Star />}>Favorite</Button>
+      <Button icon={<Heart />} /> {/* Icon only */}
+
+      {/* States */}
+      <Button disabled>Disabled</Button>
+      <Button loading>Loading...</Button>
+      <Button loading loadingIcon={<Spinner />}>Custom Loading</Button>
+
+      {/* Block Button */}
+      <Button block type="primary">Block Button (Full Width)</Button>
+
+      {/* Custom Color */}
+      <Button color="#7232dd">Custom Color</Button>
+      <Button color="linear-gradient(to right, #ff6034, #ee0a24)">
+        Gradient
+      </Button>
+
+      {/* With Click Handler */}
+      <Button type="primary" onClick={handleClick}>
+        Click Me
+      </Button>
+
+      {/* Native Type for Forms */}
+      <Button nativeType="submit">Submit</Button>
+      <Button nativeType="reset">Reset</Button>
+    </div>
+  )
+}
+```
+
+**Key Props**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| type | `'default' \| 'primary' \| 'info' \| 'warning' \| 'danger' \| 'success'` | `'default'` | Button type |
+| size | `'xlarge' \| 'large' \| 'normal' \| 'small' \| 'mini'` | `'normal'` | Button size |
+| shape | `'round' \| 'square'` | `'round'` | Button shape |
+| fill | `'solid' \| 'outline' \| 'dashed' \| 'none'` | `'solid'` | Fill mode |
+| color | `string` | - | Custom color (supports gradient) |
+| disabled | `boolean` | `false` | Disabled state |
+| loading | `boolean` | `false` | Loading state |
+| block | `boolean` | `false` | Block-level element |
+| icon | `ReactNode` | - | Left icon |
+| rightIcon | `ReactNode` | - | Right icon |
+| nativeType | `'submit' \| 'reset' \| 'button'` | `'button'` | Native button type |
+| onClick | `(e: MouseEvent) => void` | - | Click handler |
+
+#### 2. Input - 输入框组件
+
+**Import**
+```tsx
+import { Input } from '@nutui/nutui-react'
+```
+
+**Complete Example**
+```tsx
+import React, { useState, useRef } from 'react'
+import { Input, Cell, Button } from '@nutui/nutui-react'
+import { Eye, EyeSlash } from '@nutui/icons-react'
+
+function InputDemo() {
+  const [text, setText] = useState('')
+  const [password, setPassword] = useState('')
+  const inputRef = useRef<any>(null)
+
+  return (
+    <div>
+      {/* Controlled Input */}
+      <Input
+        value={text}
+        onChange={(val) => setText(val)}
+        placeholder="Please enter text"
+      />
+
+      {/* Uncontrolled Input */}
+      <Input defaultValue="Default value" placeholder="Uncontrolled" />
+
+      {/* Input Types */}
+      <Input type="text" placeholder="Text input" />
+      <Input type="password" placeholder="Password input" />
+      <Input type="number" placeholder="Number input" />
+      <Input type="digit" placeholder="Digit input (mobile)" />
+      <Input type="tel" placeholder="Telephone" />
+      <Input type="email" placeholder="Email" />
+
+      {/* With Clear Button */}
+      <Input
+        clearable
+        value={text}
+        onChange={setText}
+        placeholder="Clearable input"
+        onClear={() => console.log('Cleared!')}
+      />
+
+      {/* Password with Visibility Toggle */}
+      <Input
+        type="password"
+        value={password}
+        onChange={setPassword}
+        placeholder="Password"
+        clearable
+      />
+
+      {/* Disabled & Readonly */}
+      <Input disabled value="Disabled input" />
+      <Input readOnly value="Read-only input" />
+
+      {/* Max Length with Counter */}
+      <Input
+        maxLength={20}
+        placeholder="Max 20 characters"
+        showWordLimit
+      />
+
+      {/* Alignment */}
+      <Input align="left" placeholder="Left align" />
+      <Input align="center" placeholder="Center align" />
+      <Input align="right" placeholder="Right align" />
+
+      {/* Format Input (Phone Number) */}
+      <Input
+        placeholder="Phone number"
+        formatter={(value) => {
+          // Format: 138-0000-0000
+          return value.replace(/[^\d]/g, '')
+            .replace(/(\d{3})(\d{0,4})(\d{0,4})/, (match, p1, p2, p3) => {
+              return [p1, p2, p3].filter(Boolean).join('-')
+            })
+        }}
+        formatTrigger="onChange"
+      />
+
+      {/* Format Input (Credit Card) */}
+      <Input
+        placeholder="Credit card"
+        formatter={(value) => {
+          // Format: 1234 5678 9012 3456
+          return value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ')
+        }}
+        formatTrigger="onChange"
+      />
+
+      {/* With Events */}
+      <Input
+        placeholder="With events"
+        onChange={(val) => console.log('Changed:', val)}
+        onFocus={(val) => console.log('Focused:', val)}
+        onBlur={(val) => console.log('Blurred:', val)}
+        onClear={() => console.log('Cleared')}
+      />
+
+      {/* Auto Focus */}
+      <Input autoFocus placeholder="Auto focused" />
+
+      {/* Using Ref */}
+      <Input ref={inputRef} placeholder="With ref" />
+      <Button onClick={() => inputRef.current?.focus()}>
+        Focus Input
+      </Button>
+
+      {/* In Cell Layout */}
+      <Cell.Group>
+        <Cell title="Username">
+          <Input placeholder="Enter username" align="right" />
+        </Cell>
+        <Cell title="Password">
+          <Input type="password" placeholder="Enter password" align="right" />
+        </Cell>
+      </Cell.Group>
+    </div>
+  )
+}
+```
+
+**Key Props**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| value | `string` | - | Input value (controlled) |
+| defaultValue | `string` | - | Default value (uncontrolled) |
+| type | `'text' \| 'password' \| 'number' \| 'digit' \| 'tel' \| 'email' \| ...` | `'text'` | Input type |
+| placeholder | `string` | - | Placeholder text |
+| align | `'left' \| 'center' \| 'right'` | `'left'` | Text alignment |
+| disabled | `boolean` | `false` | Disabled state |
+| readOnly | `boolean` | `false` | Read-only state |
+| autoFocus | `boolean` | `false` | Auto focus |
+| clearable | `boolean` | `false` | Show clear button |
+| clearIcon | `ReactNode` | - | Custom clear icon |
+| maxLength | `number \| string` | - | Max length |
+| showWordLimit | `boolean` | `false` | Show character count |
+| formatter | `(val: string) => string` | - | Format input value |
+| formatTrigger | `'onChange' \| 'onBlur'` | - | When to trigger formatter |
+| onChange | `(value: string) => void` | - | Change handler |
+| onFocus | `(value: string) => void` | - | Focus handler |
+| onBlur | `(value: string) => void` | - | Blur handler |
+| onClear | `(value: string) => void` | - | Clear handler |
+
+#### 3. Cell / CellGroup - 单元格组件
+
+**Import**
+```tsx
+import { Cell } from '@nutui/nutui-react'
+```
+
+**Complete Example**
+```tsx
+import React from 'react'
+import { Cell } from '@nutui/nutui-react'
+import { Right, Location, User } from '@nutui/icons-react'
+
+function CellDemo() {
+  return (
+    <div>
+      {/* Basic Cell */}
+      <Cell title="Cell Title" />
+      <Cell title="Cell Title" description="Description text" />
+      <Cell title="Cell Title" extra="Extra info" />
+
+      {/* Cell Group with Title */}
+      <Cell.Group title="基础用法" description="Group description">
+        <Cell title="Cell Title 1" />
+        <Cell title="Cell Title 2" />
+        <Cell title="Cell Title 3" />
+      </Cell.Group>
+
+      {/* With Icon */}
+      <Cell title="User Info" icon={<User />} />
+      <Cell title="Location" icon={<Location />} extra="Beijing" />
+
+      {/* Clickable with Arrow */}
+      <Cell
+        title="Settings"
+        description="Tap to configure"
+        clickable
+        extra={<Right />}
+        onClick={() => console.log('Clicked')}
+      />
+
+      {/* Custom Content */}
+      <Cell title="Custom Extra">
+        <div style={{ color: '#fa2c19' }}>Custom content</div>
+      </Cell>
+
+      {/* With Badge */}
+      <Cell title="Messages">
+        <Badge value={99} />
+      </Cell>
+
+      {/* Vertical Align */}
+      <Cell
+        title="Long Title Long Title Long Title"
+        description="Long description text goes here"
+        align="center"
+      />
+
+      {/* No Divider */}
+      <Cell.Group divider={false}>
+        <Cell title="No Divider 1" />
+        <Cell title="No Divider 2" />
+      </Cell.Group>
+
+      {/* Common Patterns */}
+      <Cell.Group title="Account Settings">
+        <Cell title="Username" extra="john_doe" clickable />
+        <Cell title="Email" extra="john@example.com" clickable />
+        <Cell title="Phone" extra="+86 138 0000 0000" clickable />
+      </Cell.Group>
+
+      <Cell.Group title="Preferences">
+        <Cell title="Language">
+          <Select defaultValue="zh-CN">
+            <Option value="zh-CN">简体中文</Option>
+            <Option value="en-US">English</Option>
+          </Select>
+        </Cell>
+        <Cell title="Notifications">
+          <Switch defaultChecked />
+        </Cell>
+      </Cell.Group>
+    </div>
+  )
+}
+```
+
+**Key Props**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| title | `ReactNode` | - | Cell title |
+| description | `ReactNode` | - | Cell description |
+| extra | `ReactNode` | - | Right side content |
+| icon | `ReactNode` | - | Left icon |
+| align | `'flex-start' \| 'center' \| 'flex-end'` | `'flex-start'` | Vertical alignment |
+| clickable | `boolean` | `false` | Enable click feedback |
+| onClick | `(event) => void` | - | Click handler |
+
+---
+
+#### 4. Form / FormItem - 表单组件
+
+**Import**
+```tsx
+import { Form } from '@nutui/nutui-react'
+```
+
+**Complete Example**
+```tsx
+import React from 'react'
+import {
+  Form,
+  Input,
+  Button,
+  Toast,
+  Checkbox,
+  Radio,
+  Switch,
+  TextArea,
+  type FormItemRuleWithoutValidator,
+} from '@nutui/nutui-react'
+
+function FormDemo() {
+  const [form] = Form.useForm()
+
+  // Success handler
+  const onFinish = (values: any) => {
+    console.log('Form values:', values)
+    Toast.show({ content: 'Submit success!', icon: 'success' })
+  }
+
+  // Fail handler
+  const onFinishFailed = (values: any, errors: any) => {
+    console.log('Validation errors:', errors)
+    Toast.show({ content: 'Please check the form', icon: 'fail' })
+  }
+
+  // Custom validator
+  const phoneValidator = (
+    rule: FormItemRuleWithoutValidator,
+    value: string
+  ) => {
+    return /^1[3-9]\d{9}$/.test(value)
+  }
+
+  const passwordValidator = (
+    rule: FormItemRuleWithoutValidator,
+    value: string
+  ) => {
+    return value.length >= 6 && value.length <= 20
+  }
+
+  // Confirm password validator
+  const confirmPasswordValidator = async (
+    rule: FormItemRuleWithoutValidator,
+    value: string
+  ) => {
+    const password = form.getFieldValue('password')
+    if (value && value !== password) {
+      return Promise.reject('Passwords do not match')
+    }
+    return Promise.resolve()
+  }
+
+  return (
+    <Form
+      form={form}
+      divider
+      labelPosition="left"
+      starPosition="right"
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+          <Button nativeType="submit" type="primary" block>
+            Submit
+          </Button>
+          <Button nativeType="reset" block>
+            Reset
+          </Button>
+        </div>
+      }
+    >
+      {/* Required Field */}
+      <Form.Item
+        label="Username"
+        name="username"
+        rules={[{ required: true, message: 'Please enter username' }]}
+      >
+        <Input placeholder="Enter username" clearable />
+      </Form.Item>
+
+      {/* Email Validation */}
+      <Form.Item
+        label="Email"
+        name="email"
+        rules={[
+          { required: true, message: 'Please enter email' },
+          { type: 'email', message: 'Invalid email format' },
+        ]}
+      >
+        <Input type="email" placeholder="Enter email" clearable />
+      </Form.Item>
+
+      {/* Custom Validator */}
+      <Form.Item
+        label="Phone"
+        name="phone"
+        rules={[
+          { required: true, message: 'Please enter phone number' },
+          { validator: phoneValidator, message: 'Invalid phone number' },
+        ]}
+      >
+        <Input type="tel" placeholder="Enter phone number" clearable />
+      </Form.Item>
+
+      {/* Password */}
+      <Form.Item
+        label="Password"
+        name="password"
+        rules={[
+          { required: true, message: 'Please enter password' },
+          { validator: passwordValidator, message: '6-20 characters required' },
+        ]}
+      >
+        <Input type="password" placeholder="Enter password" clearable />
+      </Form.Item>
+
+      {/* Confirm Password */}
+      <Form.Item
+        label="Confirm"
+        name="confirmPassword"
+        rules={[
+          { required: true, message: 'Please confirm password' },
+          { validator: confirmPasswordValidator },
+        ]}
+      >
+        <Input type="password" placeholder="Confirm password" clearable />
+      </Form.Item>
+
+      {/* Min/Max Length */}
+      <Form.Item
+        label="Bio"
+        name="bio"
+        rules={[
+          { min: 10, message: 'At least 10 characters' },
+          { max: 200, message: 'Maximum 200 characters' },
+        ]}
+      >
+        <TextArea placeholder="Tell us about yourself" maxLength={200} />
+      </Form.Item>
+
+      {/* Pattern Validation */}
+      <Form.Item
+        label="Code"
+        name="code"
+        rules={[
+          { required: true, message: 'Please enter code' },
+          { pattern: /^\d{6}$/, message: 'Must be 6 digits' },
+        ]}
+      >
+        <Input placeholder="Enter 6-digit code" maxLength={6} />
+      </Form.Item>
+
+      {/* Checkbox */}
+      <Form.Item
+        label="Gender"
+        name="gender"
+        rules={[{ required: true, message: 'Please select gender' }]}
+      >
+        <Radio.Group>
+          <Radio value="male">Male</Radio>
+          <Radio value="female">Female</Radio>
+        </Radio.Group>
+      </Form.Item>
+
+      {/* Checkbox Group */}
+      <Form.Item
+        label="Interests"
+        name="interests"
+        rules={[{ required: true, message: 'Please select at least one' }]}
+      >
+        <Checkbox.Group>
+          <Checkbox value="sports">Sports</Checkbox>
+          <Checkbox value="music">Music</Checkbox>
+          <Checkbox value="reading">Reading</Checkbox>
+        </Checkbox.Group>
+      </Form.Item>
+
+      {/* Switch (need valuePropName) */}
+      <Form.Item
+        label="Subscribe"
+        name="subscribe"
+        valuePropName="checked"
+      >
+        <Switch />
+      </Form.Item>
+
+      {/* Agreement Checkbox */}
+      <Form.Item
+        name="agreement"
+        valuePropName="checked"
+        rules={[
+          {
+            validator: (_, value) =>
+              value ? Promise.resolve() : Promise.reject('Please agree'),
+          },
+        ]}
+      >
+        <Checkbox>I agree to the terms and conditions</Checkbox>
+      </Form.Item>
+    </Form>
+  )
+}
+
+// Programmatic Form Operations
+function FormOperationsDemo() {
+  const [form] = Form.useForm()
+
+  return (
+    <>
+      <Form form={form}>
+        <Form.Item label="Name" name="name">
+          <Input placeholder="Enter name" />
+        </Form.Item>
+      </Form>
+
+      <div>
+        <Button onClick={() => {
+          form.setFieldsValue({ name: 'John Doe' })
+        }}>
+          Set Name
+        </Button>
+
+        <Button onClick={() => {
+          const name = form.getFieldValue('name')
+          console.log('Name:', name)
+        }}>
+          Get Name
+        </Button>
+
+        <Button onClick={() => {
+          const allValues = form.getFieldsValue()
+          console.log('All values:', allValues)
+        }}>
+          Get All Values
+        </Button>
+
+        <Button onClick={() => {
+          form.resetFields()
+        }}>
+          Reset
+        </Button>
+
+        <Button onClick={async () => {
+          try {
+            await form.submit()
+            console.log('Validation passed')
+          } catch (error) {
+            console.log('Validation failed', error)
+          }
+        }}>
+          Validate
+        </Button>
+      </div>
+    </>
+  )
+}
+```
+
+**Key Props - Form**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| form | `FormInstance` | - | Form instance from Form.useForm() |
+| initialValues | `any` | - | Initial form values |
+| labelPosition | `'top' \| 'left' \| 'right'` | `'right'` | Label position |
+| starPosition | `'left' \| 'right'` | `'left'` | Required star position |
+| footer | `ReactNode` | - | Form footer (buttons) |
+| onFinish | `(values) => void` | - | Success handler |
+| onFinishFailed | `(values, errors) => void` | - | Fail handler |
+
+**Key Props - Form.Item**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| name | `string` | - | Field name (required for validation) |
+| label | `ReactNode` | - | Field label |
+| rules | `Rule[]` | - | Validation rules |
+| initialValue | `any` | - | Initial value |
+| required | `boolean` | `false` | Show required star (style only) |
+| valuePropName | `string` | `'value'` | Value prop name (e.g., 'checked' for Switch) |
+
+**Common Validation Rules**
+```tsx
+// Required
+{ required: true, message: 'This field is required' }
+
+// Type validation
+{ type: 'email', message: 'Invalid email' }
+{ type: 'number', message: 'Must be a number' }
+{ type: 'url', message: 'Invalid URL' }
+
+// Length validation
+{ len: 11, message: 'Must be exactly 11 characters' }
+{ min: 6, message: 'At least 6 characters' }
+{ max: 20, message: 'Maximum 20 characters' }
+
+// Pattern matching
+{ pattern: /^\d+$/, message: 'Must be digits only' }
+
+// Custom validator
+{
+  validator: (rule, value) => {
+    if (value && value < 18) {
+      return Promise.reject('Must be 18 or older')
+    }
+    return Promise.resolve()
+  }
+}
+```
+
+#### 5. Checkbox / CheckboxGroup - 复选框组件
+
+**Import**
+```tsx
+import { Checkbox } from '@nutui/nutui-react'
+```
+
+**Complete Example**
+```tsx
+import React, { useState } from 'react'
+import { Checkbox, Cell, Button } from '@nutui/nutui-react'
+import { Checklist } from '@nutui/icons-react'
+
+function CheckboxDemo() {
+  const [checked, setChecked] = useState(false)
+  const [checkboxGroup, setCheckboxGroup] = useState(['1', '2'])
+
+  return (
+    <div>
+      {/* Basic Checkbox */}
+      <Checkbox defaultChecked>Default checked</Checkbox>
+      <Checkbox>Unchecked</Checkbox>
+
+      {/* Controlled Checkbox */}
+      <Checkbox
+        checked={checked}
+        onChange={(checked) => {
+          setChecked(checked)
+          console.log('Checked:', checked)
+        }}
+      >
+        {checked ? 'Checked' : 'Unchecked'}
+      </Checkbox>
+
+      {/* Disabled */}
+      <Checkbox disabled>Disabled</Checkbox>
+      <Checkbox disabled checked>Disabled & Checked</Checkbox>
+
+      {/* Custom Size */}
+      <Checkbox iconSize={20}>Small</Checkbox>
+      <Checkbox iconSize={30}>Large</Checkbox>
+
+      {/* Custom Icon */}
+      <Checkbox
+        icon={<Checklist />}
+        activeIcon={<Checklist color="red" />}
+      >
+        Custom Icon
+      </Checkbox>
+
+      {/* Indeterminate State */}
+      <Checkbox indeterminate>Indeterminate</Checkbox>
+
+      {/* Checkbox Group - Basic */}
+      <Checkbox.Group
+        defaultValue={['1']}
+        onChange={(value) => {
+          console.log('Selected:', value)
+        }}
+      >
+        <Checkbox value="1">Option 1</Checkbox>
+        <Checkbox value="2">Option 2</Checkbox>
+        <Checkbox value="3">Option 3</Checkbox>
+      </Checkbox.Group>
+
+      {/* Checkbox Group - Controlled */}
+      <Checkbox.Group
+        value={checkboxGroup}
+        onChange={setCheckboxGroup}
+      >
+        <Checkbox value="1">Option 1</Checkbox>
+        <Checkbox value="2">Option 2</Checkbox>
+        <Checkbox value="3">Option 3</Checkbox>
+        <Checkbox value="4">Option 4</Checkbox>
+      </Checkbox.Group>
+      <div>Selected: {checkboxGroup.join(', ')}</div>
+
+      {/* Checkbox Group - Horizontal */}
+      <Checkbox.Group
+        defaultValue={['1']}
+        direction="horizontal"
+      >
+        <Checkbox value="1">Option 1</Checkbox>
+        <Checkbox value="2">Option 2</Checkbox>
+        <Checkbox value="3">Option 3</Checkbox>
+      </Checkbox.Group>
+
+      {/* Checkbox Group - Disabled */}
+      <Checkbox.Group defaultValue={['1']} disabled>
+        <Checkbox value="1">Option 1</Checkbox>
+        <Checkbox value="2">Option 2</Checkbox>
+      </Checkbox.Group>
+
+      {/* Select All / Deselect All */}
+      <CheckboxSelectAll />
+
+      {/* In Cell Layout */}
+      <Cell.Group>
+        <Cell>
+          <Checkbox value="1">Receive notifications</Checkbox>
+        </Cell>
+        <Cell>
+          <Checkbox value="2">Enable dark mode</Checkbox>
+        </Cell>
+        <Cell>
+          <Checkbox value="3">Auto play videos</Checkbox>
+        </Cell>
+      </Cell.Group>
+    </div>
+  )
+}
+
+// Select All Component
+function CheckboxSelectAll() {
+  const [checkboxGroup, setCheckboxGroup] = useState<string[]>(['1'])
+  const allOptions = ['1', '2', '3', '4']
+
+  const selectAll = () => {
+    if (checkboxGroup.length === allOptions.length) {
+      setCheckboxGroup([]) // Deselect all
+    } else {
+      setCheckboxGroup(allOptions) // Select all
+    }
+  }
+
+  return (
+    <div>
+      <Button onClick={selectAll}>
+        {checkboxGroup.length === allOptions.length
+          ? 'Deselect All'
+          : 'Select All'}
+      </Button>
+
+      <Checkbox.Group value={checkboxGroup} onChange={setCheckboxGroup}>
+        <Checkbox value="1">Option 1</Checkbox>
+        <Checkbox value="2">Option 2</Checkbox>
+        <Checkbox value="3">Option 3</Checkbox>
+        <Checkbox value="4">Option 4</Checkbox>
+      </Checkbox.Group>
+    </div>
+  )
+}
+```
+
+**Key Props - Checkbox**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| checked | `boolean` | - | Checked state (controlled) |
+| defaultChecked | `boolean` | `false` | Default checked (uncontrolled) |
+| disabled | `boolean` | `false` | Disabled state |
+| indeterminate | `boolean` | `false` | Indeterminate state |
+| iconSize | `number \| string` | - | Icon size |
+| icon | `ReactNode` | - | Custom unchecked icon |
+| activeIcon | `ReactNode` | - | Custom checked icon |
+| onChange | `(checked: boolean) => void` | - | Change handler |
+
+**Key Props - Checkbox.Group**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| value | `string[]` | - | Selected values (controlled) |
+| defaultValue | `string[]` | - | Default selected (uncontrolled) |
+| disabled | `boolean` | `false` | Disable all checkboxes |
+| direction | `'vertical' \| 'horizontal'` | `'vertical'` | Layout direction |
+| onChange | `(value: string[]) => void` | - | Change handler |
+
+---
+
+#### 6. Picker - 选择器组件
+
+**Import**
+```tsx
+import { Picker } from '@nutui/nutui-react'
+```
+
+**Complete Example**
+```tsx
+import React, { useState } from 'react'
+import { Picker, Cell } from '@nutui/nutui-react'
+
+function PickerDemo() {
+  const [visible, setVisible] = useState(false)
+  const [desc, setDesc] = useState('')
+
+  // Single Column Data
+  const singleColumn = [
+    [
+      { value: 1, label: 'Option 1' },
+      { value: 2, label: 'Option 2' },
+      { value: 3, label: 'Option 3' },
+      { value: 4, label: 'Option 4' },
+    ],
+  ]
+
+  // Multiple Columns Data
+  const multiColumn = [
+    // Column 1
+    [
+      { value: 1, label: 'Monday' },
+      { value: 2, label: 'Tuesday' },
+      { value: 3, label: 'Wednesday' },
+    ],
+    // Column 2
+    [
+      { value: 1, label: 'Morning' },
+      { value: 2, label: 'Afternoon' },
+      { value: 3, label: 'Evening' },
+    ],
+  ]
+
+  // Cascading Data
+  const cascadeData = [
+    [
+      {
+        value: 1,
+        label: 'Beijing',
+        children: [
+          { value: 11, label: 'Chaoyang District' },
+          { value: 12, label: 'Haidian District' },
+        ],
+      },
+      {
+        value: 2,
+        label: 'Shanghai',
+        children: [
+          { value: 21, label: 'Pudong District' },
+          { value: 22, label: 'Huangpu District' },
+        ],
+      },
+    ],
+  ]
+
+  return (
+    <div>
+      {/* Basic Picker */}
+      <Cell
+        title="Select City"
+        description={desc}
+        onClick={() => setVisible(true)}
+      />
+      <Picker
+        visible={visible}
+        title="Select City"
+        options={singleColumn}
+        onConfirm={(selectedOptions, selectedValue) => {
+          const labels = selectedOptions.map((option) => option.label)
+          setDesc(labels.join(' '))
+          setVisible(false)
+        }}
+        onClose={() => setVisible(false)}
+      />
+
+      {/* Multi Column Picker */}
+      <MultiColumnPicker />
+
+      {/* Cascading Picker */}
+      <CascadingPicker />
+
+      {/* With Default Value */}
+      <PickerWithDefault />
+
+      {/* Controlled Picker */}
+      <ControlledPicker />
+
+      {/* Flat Display (No 3D) */}
+      <Picker
+        visible={visible}
+        options={singleColumn}
+        threeDimensional={false}
+        onClose={() => setVisible(false)}
+      />
+
+      {/* Custom Duration */}
+      <Picker
+        visible={visible}
+        options={singleColumn}
+        duration={500} // Scroll animation duration
+        onClose={() => setVisible(false)}
+      />
+    </div>
+  )
+}
+
+// Multi Column Picker
+function MultiColumnPicker() {
+  const [visible, setVisible] = useState(false)
+  const [desc, setDesc] = useState('')
+
+  const options = [
+    [
+      { value: '2024', label: '2024' },
+      { value: '2025', label: '2025' },
+    ],
+    [
+      { value: '01', label: 'January' },
+      { value: '02', label: 'February' },
+      { value: '03', label: 'March' },
+    ],
+    [
+      { value: '01', label: '01' },
+      { value: '02', label: '02' },
+      { value: '03', label: '03' },
+    ],
+  ]
+
+  return (
+    <>
+      <Cell
+        title="Select Date"
+        description={desc}
+        onClick={() => setVisible(true)}
+      />
+      <Picker
+        visible={visible}
+        title="Select Date"
+        options={options}
+        onConfirm={(selectedOptions) => {
+          const result = selectedOptions.map((opt) => opt.label).join('-')
+          setDesc(result)
+          setVisible(false)
+        }}
+        onClose={() => setVisible(false)}
+      />
+    </>
+  )
+}
+
+// Cascading Picker
+function CascadingPicker() {
+  const [visible, setVisible] = useState(false)
+  const [desc, setDesc] = useState('')
+
+  const options = [
+    [
+      {
+        value: '1',
+        label: 'Jiangsu',
+        children: [
+          {
+            value: '1-1',
+            label: 'Nanjing',
+            children: [
+              { value: '1-1-1', label: 'Xuanwu District' },
+              { value: '1-1-2', label: 'Qinhuai District' },
+            ],
+          },
+          {
+            value: '1-2',
+            label: 'Suzhou',
+            children: [
+              { value: '1-2-1', label: 'Gusu District' },
+              { value: '1-2-2', label: 'Wuzhong District' },
+            ],
+          },
+        ],
+      },
+      {
+        value: '2',
+        label: 'Zhejiang',
+        children: [
+          {
+            value: '2-1',
+            label: 'Hangzhou',
+            children: [
+              { value: '2-1-1', label: 'Xihu District' },
+              { value: '2-1-2', label: 'Yuhang District' },
+            ],
+          },
+        ],
+      },
+    ],
+  ]
+
+  return (
+    <>
+      <Cell
+        title="Select Region"
+        description={desc}
+        onClick={() => setVisible(true)}
+      />
+      <Picker
+        visible={visible}
+        title="Select Region"
+        options={options}
+        onConfirm={(selectedOptions) => {
+          const result = selectedOptions.map((opt) => opt.label).join(' > ')
+          setDesc(result)
+          setVisible(false)
+        }}
+        onClose={() => setVisible(false)}
+      />
+    </>
+  )
+}
+
+// Controlled Picker
+function ControlledPicker() {
+  const [visible, setVisible] = useState(false)
+  const [value, setValue] = useState<(string | number)[]>([1])
+
+  const options = [
+    [
+      { value: 1, label: 'Option 1' },
+      { value: 2, label: 'Option 2' },
+      { value: 3, label: 'Option 3' },
+    ],
+  ]
+
+  return (
+    <>
+      <Cell
+        title="Controlled"
+        description={`Selected: ${value}`}
+        onClick={() => setVisible(true)}
+      />
+      <Picker
+        visible={visible}
+        options={options}
+        value={value}
+        onChange={(selectedOptions, selectedValue) => {
+          console.log('Changing:', selectedValue)
+          setValue(selectedValue)
+        }}
+        onConfirm={(selectedOptions, selectedValue) => {
+          setValue(selectedValue)
+          setVisible(false)
+        }}
+        onClose={() => setVisible(false)}
+      />
+    </>
+  )
+}
+```
+
+**Key Props**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| visible | `boolean` | `false` | Show/hide picker |
+| title | `string` | - | Picker title |
+| options | `PickerOptions` | `[]` | Picker data |
+| value | `(string \| number)[]` | - | Selected values (controlled) |
+| defaultValue | `(string \| number)[]` | - | Default selected values |
+| threeDimensional | `boolean` | `true` | Enable 3D effect |
+| duration | `number \| string` | `1000` | Scroll animation duration (ms) |
+| onConfirm | `(selectedOptions, selectedValue) => void` | - | Confirm handler |
+| onChange | `(selectedOptions, selectedValue) => void` | - | Change handler |
+| onClose | `() => void` | - | Close handler |
+
+---
+
+### 💬 Feedback Components
+
+#### 7. Dialog - 对话框组件
+
+**Import**
+```tsx
+import { Dialog } from '@nutui/nutui-react'
+```
+
+**Complete Example**
+```tsx
+import React, { useState } from 'react'
+import { Dialog, Button } from '@nutui/nutui-react'
+
+function DialogDemo() {
+  const [visible1, setVisible1] = useState(false)
+  const [visible2, setVisible2] = useState(false)
+
+  return (
+    <div>
+      {/* Imperative API - Alert */}
+      <Button onClick={() => {
+        Dialog.alert({
+          title: 'Alert Title',
+          content: 'This is an alert message',
+          onConfirm: () => {
+            console.log('Alert confirmed')
+          },
+        })
+      }}>
+        Show Alert
+      </Button>
+
+      {/* Imperative API - Confirm */}
+      <Button onClick={() => {
+        Dialog.confirm({
+          title: 'Confirm',
+          content: 'Are you sure you want to delete this item?',
+          onConfirm: () => {
+            console.log('Confirmed')
+            Toast.show('Deleted successfully')
+          },
+          onCancel: () => {
+            console.log('Cancelled')
+          },
+        })
+      }}>
+        Show Confirm
+      </Button>
+
+      {/* With Custom Buttons */}
+      <Button onClick={() => {
+        Dialog.confirm({
+          title: 'Warning',
+          content: 'This action cannot be undone',
+          confirmText: 'Delete',
+          cancelText: 'Keep',
+          onConfirm: () => console.log('Delete'),
+          onCancel: () => console.log('Keep'),
+        })
+      }}>
+        Custom Buttons
+      </Button>
+
+      {/* No Title */}
+      <Button onClick={() => {
+        Dialog.alert({
+          content: 'Message without title',
+          onConfirm: () => console.log('OK'),
+        })
+      }}>
+        No Title
+      </Button>
+
+      {/* Declarative API - Basic */}
+      <Button onClick={() => setVisible1(true)}>
+        Declarative Dialog
+      </Button>
+      <Dialog
+        visible={visible1}
+        title="Title"
+        content="Dialog content goes here"
+        onConfirm={() => {
+          console.log('Confirmed')
+          setVisible1(false)
+        }}
+        onCancel={() => {
+          console.log('Cancelled')
+          setVisible1(false)
+        }}
+      />
+
+      {/* With Custom Content */}
+      <Button onClick={() => setVisible2(true)}>
+        Custom Content
+      </Button>
+      <Dialog
+        visible={visible2}
+        title="Custom Content"
+        onConfirm={() => setVisible2(false)}
+        onCancel={() => setVisible2(false)}
+      >
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <Input placeholder="Enter your name" />
+          <div style={{ marginTop: '10px' }}>
+            <Checkbox>Remember me</Checkbox>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* Close on Click Overlay */}
+      <Button onClick={() => {
+        Dialog.confirm({
+          title: 'Tip',
+          content: 'Click overlay to close',
+          closeOnOverlayClick: true,
+          onConfirm: () => console.log('Confirmed'),
+        })
+      }}>
+        Click Overlay to Close
+      </Button>
+
+      {/* No Footer (No Buttons) */}
+      <Dialog
+        visible={visible}
+        title="No Footer"
+        footer={null}
+        closeOnOverlayClick
+        onClose={() => setVisible(false)}
+      >
+        Custom dialog without buttons
+      </Dialog>
+
+      {/* Async Close */}
+      <Button onClick={() => {
+        Dialog.confirm({
+          title: 'Async Operation',
+          content: 'Please wait...',
+          onConfirm: async () => {
+            console.log('Processing...')
+            await new Promise((resolve) => setTimeout(resolve, 2000))
+            console.log('Done!')
+            return true // Return true to close
+          },
+        })
+      }}>
+        Async Confirm
+      </Button>
+    </div>
+  )
+}
+```
+
+**Key Props**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| visible | `boolean` | `false` | Show/hide dialog |
+| title | `ReactNode` | - | Dialog title |
+| content | `ReactNode` | - | Dialog content |
+| confirmText | `string` | `'确认'` | Confirm button text |
+| cancelText | `string` | `'取消'` | Cancel button text |
+| closeOnOverlayClick | `boolean` | `false` | Close on overlay click |
+| footer | `ReactNode` | - | Custom footer |
+| onConfirm | `() => void \| Promise<boolean>` | - | Confirm handler |
+| onCancel | `() => void` | - | Cancel handler |
+| onClose | `() => void` | - | Close handler |
+
+**Imperative Methods**
+```tsx
+// Alert
+Dialog.alert({ title, content, onConfirm })
+
+// Confirm
+Dialog.confirm({ title, content, onConfirm, onCancel })
+
+// Destroy all dialogs
+Dialog.destroyAll()
+```
+
+#### 8. Toast - 轻提示组件
+
+**Import**
+```tsx
+import { Toast } from '@nutui/nutui-react'
+```
+
+**Complete Example**
+```tsx
+import React from 'react'
+import { Toast, Button } from '@nutui/nutui-react'
+
+function ToastDemo() {
+  return (
+    <div>
+      {/* Basic Toast */}
+      <Button onClick={() => {
+        Toast.show('Basic toast message')
+      }}>
+        Basic Toast
+      </Button>
+
+      {/* Success Toast */}
+      <Button onClick={() => {
+        Toast.success('Operation successful!')
+      }}>
+        Success Toast
+      </Button>
+
+      {/* Fail Toast */}
+      <Button onClick={() => {
+        Toast.fail('Operation failed!')
+      }}>
+        Fail Toast
+      </Button>
+
+      {/* Warning Toast */}
+      <Button onClick={() => {
+        Toast.warn('Warning message')
+      }}>
+        Warning Toast
+      </Button>
+
+      {/* Loading Toast */}
+      <Button onClick={() => {
+        Toast.loading('Loading...')
+        // Auto hide after some time
+        setTimeout(() => {
+          Toast.hide()
+          Toast.success('Loaded!')
+        }, 2000)
+      }}>
+        Loading Toast
+      </Button>
+
+      {/* With Options */}
+      <Button onClick={() => {
+        Toast.show({
+          content: 'Custom toast',
+          duration: 5000, // 5 seconds
+          position: 'top', // top, center, bottom
+          icon: 'success',
+        })
+      }}>
+        With Options
+      </Button>
+
+      {/* Different Positions */}
+      <Button onClick={() => Toast.show({ content: 'Top', position: 'top' })}>
+        Top
+      </Button>
+      <Button onClick={() => Toast.show({ content: 'Center', position: 'center' })}>
+        Center
+      </Button>
+      <Button onClick={() => Toast.show({ content: 'Bottom', position: 'bottom' })}>
+        Bottom
+      </Button>
+
+      {/* Custom Icon */}
+      <Button onClick={() => {
+        Toast.show({
+          content: 'Custom Icon',
+          icon: <Star color="gold" />,
+        })
+      }}>
+        Custom Icon
+      </Button>
+
+      {/* No Icon */}
+      <Button onClick={() => {
+        Toast.show({
+          content: 'No Icon',
+          icon: null,
+        })
+      }}>
+        No Icon
+      </Button>
+
+      {/* Hide Toast Manually */}
+      <Button onClick={() => {
+        Toast.loading('Processing...')
+        // Hide after 2 seconds
+        setTimeout(() => {
+          Toast.hide()
+        }, 2000)
+      }}>
+        Manual Hide
+      </Button>
+
+      {/* With Callback */}
+      <Button onClick={() => {
+        Toast.show({
+          content: 'Toast with callback',
+          onClose: () => {
+            console.log('Toast closed')
+          },
+        })
+      }}>
+        With Callback
+      </Button>
+
+      {/* Async Operation Pattern */}
+      <Button onClick={async () => {
+        Toast.loading('Processing...')
+        try {
+          await simulateAsyncOperation()
+          Toast.hide()
+          Toast.success('Success!')
+        } catch (error) {
+          Toast.hide()
+          Toast.fail('Failed!')
+        }
+      }}>
+        Async Operation
+      </Button>
+    </div>
+  )
+}
+
+async function simulateAsyncOperation() {
+  return new Promise((resolve) => setTimeout(resolve, 2000))
+}
+```
+
+**Imperative Methods**
+```tsx
+// Basic
+Toast.show('Message')
+Toast.show({ content: 'Message', ...options })
+
+// With Icon
+Toast.success('Success!')
+Toast.fail('Failed!')
+Toast.warn('Warning!')
+Toast.loading('Loading...')
+
+// Hide
+Toast.hide()
+
+// Clear all
+Toast.clear()
+```
+
+**Common Options**
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| content | `string` | - | Toast content |
+| duration | `number` | `2000` | Display duration (ms), 0 for always show |
+| position | `'top' \| 'center' \| 'bottom'` | `'center'` | Toast position |
+| icon | `ReactNode \| null` | - | Custom icon |
+| onClose | `() => void` | - | Close callback |
+
+---
+
+#### 9. Popup - 弹出层组件
+
+**Import**
+```tsx
+import { Popup } from '@nutui/nutui-react'
+```
+
+**Complete Example**
+```tsx
+import React, { useState } from 'react'
+import { Popup, Button, Cell } from '@nutui/nutui-react'
+
+function PopupDemo() {
+  const [visible, setVisible] = useState(false)
+  const [position, setPosition] = useState<'bottom' | 'top' | 'left' | 'right' | 'center'>('bottom')
+
+  return (
+    <div>
+      {/* Bottom Popup */}
+      <Button onClick={() => {
+        setPosition('bottom')
+        setVisible(true)
+      }}>
+        Bottom Popup
+      </Button>
+      
+      {/* Top Popup */}
+      <Button onClick={() => {
+        setPosition('top')
+        setVisible(true)
+      }}>
+        Top Popup
+      </Button>
+
+      {/* Left Popup */}
+      <Button onClick={() => {
+        setPosition('left')
+        setVisible(true)
+      }}>
+        Left Popup
+      </Button>
+
+      {/* Right Popup */}
+      <Button onClick={() => {
+        setPosition('right')
+        setVisible(true)
+      }}>
+        Right Popup
+      </Button>
+
+      {/* Center Popup */}
+      <Button onClick={() => {
+        setPosition('center')
+        setVisible(true)
+      }}>
+        Center Popup
+      </Button>
+
+      <Popup
+        visible={visible}
+        position={position}
+        onClose={() => setVisible(false)}
+      >
+        <div style={{ padding: '20px', minHeight: '200px' }}>
+          <h3>Popup Content</h3>
+          <p>Position: {position}</p>
+          <Button onClick={() => setVisible(false)}>Close</Button>
+        </div>
+      </Popup>
+
+      {/* With Round Corners */}
+      <PopupWithRound />
+
+      {/* Close on Overlay Click */}
+      <PopupCloseOnOverlay />
+
+      {/* With Title */}
+      <PopupWithTitle />
+
+      {/* Full Screen */}
+      <PopupFullScreen />
+
+      {/* Custom Style */}
+      <PopupCustomStyle />
+    </div>
+  )
+}
+
+// Popup with Round Corners
+function PopupWithRound() {
+  const [visible, setVisible] = useState(false)
+  
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>
+        Round Corners
+      </Button>
+      <Popup
+        visible={visible}
+        position="bottom"
+        round
+        onClose={() => setVisible(false)}
+      >
+        <div style={{ padding: '40px' }}>
+          Popup with round corners
+        </div>
+      </Popup>
+    </>
+  )
+}
+
+// Close on Overlay Click
+function PopupCloseOnOverlay() {
+  const [visible, setVisible] = useState(false)
+  
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>
+        Click Overlay to Close
+      </Button>
+      <Popup
+        visible={visible}
+        position="bottom"
+        closeOnOverlayClick
+        onClose={() => setVisible(false)}
+      >
+        <div style={{ padding: '40px' }}>
+          Click outside to close
+        </div>
+      </Popup>
+    </>
+  )
+}
+
+// Popup with Title
+function PopupWithTitle() {
+  const [visible, setVisible] = useState(false)
+  
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>
+        With Title
+      </Button>
+      <Popup
+        visible={visible}
+        position="bottom"
+        round
+        closeable
+        title="Title"
+        description="Popup description text"
+        onClose={() => setVisible(false)}
+      >
+        <div style={{ padding: '40px' }}>
+          Content goes here
+        </div>
+      </Popup>
+    </>
+  )
+}
+
+// Full Screen Popup
+function PopupFullScreen() {
+  const [visible, setVisible] = useState(false)
+  
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>
+        Full Screen
+      </Button>
+      <Popup
+        visible={visible}
+        position="bottom"
+        style={{ height: '100%' }}
+        closeable
+        onClose={() => setVisible(false)}
+      >
+        <div style={{ padding: '20px', height: '100%' }}>
+          <h2>Full Screen Popup</h2>
+          <p>This popup takes full screen</p>
+        </div>
+      </Popup>
+    </>
+  )
+}
+
+// Custom Style Popup
+function PopupCustomStyle() {
+  const [visible, setVisible] = useState(false)
+  
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>
+        Custom Style
+      </Button>
+      <Popup
+        visible={visible}
+        position="center"
+        style={{
+          width: '90%',
+          height: '300px',
+          borderRadius: '20px',
+          padding: '20px',
+        }}
+        onClose={() => setVisible(false)}
+      >
+        <h3>Custom Styled Popup</h3>
+        <p>With custom width, height, and border radius</p>
+        <Button onClick={() => setVisible(false)}>Close</Button>
+      </Popup>
+    </>
+  )
+}
+
+// Common Use Case: Bottom Sheet Menu
+function BottomSheetMenu() {
+  const [visible, setVisible] = useState(false)
+  
+  const menuItems = [
+    { label: 'Option 1', onClick: () => console.log('Option 1') },
+    { label: 'Option 2', onClick: () => console.log('Option 2') },
+    { label: 'Option 3', onClick: () => console.log('Option 3') },
+  ]
+  
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>
+        Show Menu
+      </Button>
+      <Popup
+        visible={visible}
+        position="bottom"
+        round
+        onClose={() => setVisible(false)}
+      >
+        <div>
+          {menuItems.map((item, index) => (
+            <Cell
+              key={index}
+              title={item.label}
+              clickable
+              onClick={() => {
+                item.onClick()
+                setVisible(false)
+              }}
+            />
+          ))}
+          <Cell
+            title="Cancel"
+            clickable
+            onClick={() => setVisible(false)}
+          />
+        </div>
+      </Popup>
+    </>
+  )
+}
+```
+
+**Key Props**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| visible | `boolean` | `false` | Show/hide popup |
+| position | `'top' \| 'bottom' \| 'left' \| 'right' \| 'center'` | `'center'` | Popup position |
+| round | `boolean` | `false` | Round corners |
+| closeable | `boolean` | `false` | Show close button |
+| closeOnOverlayClick | `boolean` | `true` | Close on overlay click |
+| title | `string` | - | Popup title |
+| description | `string` | - | Popup description |
+| style | `CSSProperties` | - | Custom style |
+| onClose | `() => void` | - | Close handler |
+| onOpen | `() => void` | - | Open handler |
+
+---
+
+### 🎨 Display Components
+
+#### 10. Tabs / TabPane - 标签页组件
+
+**Import**
+```tsx
+import { Tabs } from '@nutui/nutui-react'
+```
+
+**Complete Example**
+```tsx
+import React, { useState } from 'react'
+import { Tabs } from '@nutui/nutui-react'
+
+function TabsDemo() {
+  const [tab1, setTab1] = useState('0')
+
+  return (
+    <div>
+      {/* Basic Tabs */}
+      <Tabs value={tab1} onChange={(value) => setTab1(value)}>
+        <Tabs.TabPane title="Tab 1">
+          <div style={{ padding: '20px' }}>Content of Tab 1</div>
+        </Tabs.TabPane>
+        <Tabs.TabPane title="Tab 2">
+          <div style={{ padding: '20px' }}>Content of Tab 2</div>
+        </Tabs.TabPane>
+        <Tabs.TabPane title="Tab 3">
+          <div style={{ padding: '20px' }}>Content of Tab 3</div>
+        </Tabs.TabPane>
+      </Tabs>
+
+      {/* Smile Curve Style */}
+      <Tabs defaultValue="0" activeType="smile">
+        <Tabs.TabPane title="Tab 1">Content 1</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 2">Content 2</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 3">Content 3</Tabs.TabPane>
+      </Tabs>
+
+      {/* Simple Style (No Underline) */}
+      <Tabs defaultValue="0" activeType="simple">
+        <Tabs.TabPane title="Tab 1">Content 1</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 2">Content 2</Tabs.TabPane>
+      </Tabs>
+
+      {/* Card Style */}
+      <Tabs defaultValue="0" activeType="card">
+        <Tabs.TabPane title="Tab 1">Content 1</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 2">Content 2</Tabs.TabPane>
+      </Tabs>
+
+      {/* Button Style */}
+      <Tabs defaultValue="0" activeType="button">
+        <Tabs.TabPane title="Tab 1">Content 1</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 2">Content 2</Tabs.TabPane>
+      </Tabs>
+
+      {/* Scrollable Tabs */}
+      <Tabs defaultValue="0">
+        <Tabs.TabPane title="Tab 1">Content 1</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 2">Content 2</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 3">Content 3</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 4">Content 4</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 5">Content 5</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 6">Content 6</Tabs.TabPane>
+      </Tabs>
+
+      {/* Left Aligned */}
+      <Tabs defaultValue="0" align="left">
+        <Tabs.TabPane title="Tab 1">Content 1</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 2">Content 2</Tabs.TabPane>
+      </Tabs>
+
+      {/* With Custom Value */}
+      <Tabs defaultValue="tab1">
+        <Tabs.TabPane title="First" value="tab1">
+          Content 1
+        </Tabs.TabPane>
+        <Tabs.TabPane title="Second" value="tab2">
+          Content 2
+        </Tabs.TabPane>
+      </Tabs>
+
+      {/* Disabled Tab */}
+      <Tabs defaultValue="0">
+        <Tabs.TabPane title="Tab 1">Content 1</Tabs.TabPane>
+        <Tabs.TabPane title="Tab 2" disabled>
+          Content 2 (Disabled)
+        </Tabs.TabPane>
+        <Tabs.TabPane title="Tab 3">Content 3</Tabs.TabPane>
+      </Tabs>
+
+      {/* With Icon */}
+      <Tabs defaultValue="0">
+        <Tabs.TabPane title={<><Home /> Home</>}>
+          Home Content
+        </Tabs.TabPane>
+        <Tabs.TabPane title={<><User /> Profile</>}>
+          Profile Content
+        </Tabs.TabPane>
+      </Tabs>
+
+      {/* Auto Height */}
+      <Tabs defaultValue="0" autoHeight>
+        <Tabs.TabPane title="Short">
+          <div style={{ padding: '20px' }}>Short content</div>
+        </Tabs.TabPane>
+        <Tabs.TabPane title="Long">
+          <div style={{ padding: '20px' }}>
+            <div style={{ height: '500px' }}>Long content</div>
+          </div>
+        </Tabs.TabPane>
+      </Tabs>
+    </div>
+  )
+}
+```
+
+**Key Props - Tabs**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| value | `string \| number` | - | Active tab (controlled) |
+| defaultValue | `string \| number` | `0` | Default active tab |
+| activeType | `'line' \| 'smile' \| 'simple' \| 'card' \| 'button' \| 'divider'` | `'line'` | Tab style |
+| align | `'left' \| 'right'` | - | Tab alignment |
+| autoHeight | `boolean` | `false` | Auto adjust height |
+| onChange | `(value: string \| number) => void` | - | Tab change handler |
+
+**Key Props - TabPane**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| title | `ReactNode` | - | Tab title |
+| value | `string \| number` | - | Tab value |
+| disabled | `boolean` | `false` | Disabled state |
+
+## Theme Customization
+
+### Available Themes
+
+1. **Default Theme** - JD standard theme
+2. **JMAPP Theme** - JD Merchant App theme
+3. **JRKF Theme** - JD Reading & Knowledge theme
+4. **Dark Mode** - Dark theme
+
+### Using Different Themes
+
+```tsx
+// Import theme CSS
+import '@nutui/nutui-react/dist/style.css' // Default
+// import '@nutui/nutui-react/dist/style-jmapp.css' // JMAPP
+// import '@nutui/nutui-react/dist/style-jrkf.css' // JRKF
+```
+
+### Custom Theme with ConfigProvider
+
+```tsx
+import { ConfigProvider, Button } from '@nutui/nutui-react'
+
+function App() {
+  return (
+    <ConfigProvider
+      theme={{
+        nutuiColorPrimary: '#1890ff',
+        nutuiColorPrimaryStop1: '#096dd9',
+      }}
+    >
+      <Button type="primary">Custom Theme Button</Button>
+    </ConfigProvider>
+  )
+}
+```
+
+### CSS Variables
+
+All components support CSS variable customization:
+
+```css
+.custom-button {
+  --nutui-button-border-radius: 20px;
+  --nutui-button-default-color: #333;
+  --nutui-button-default-background-color: #fff;
+}
+```
+
+## Internationalization
+
+### Supported Languages
+
+- zh-CN (Simplified Chinese) - Default
+- zh-TW (Traditional Chinese)
+- en-US (English)
+- id-ID (Indonesian)
+- tr-TR (Turkish)
+
+### Usage
+
+```tsx
+import { ConfigProvider } from '@nutui/nutui-react'
+import enUS from '@nutui/nutui-react/dist/locales/en-US'
+
+function App() {
+  return (
+    <ConfigProvider locale={enUS}>
+      {/* All components inside will use English */}
+      <YourApp />
+    </ConfigProvider>
+  )
+}
+```
+
+### Custom Locale
+
+```tsx
+const customLocale = {
+  save: 'Save',
+  confirm: 'OK',
+  cancel: 'Cancel',
+  // ... other translations
+}
+
+<ConfigProvider locale={customLocale}>
+  <App />
+</ConfigProvider>
+```
+
+## Taro (Mini Program) Usage
+
+For mini-program development with Taro:
+
+### Installation
+
+Same package, different usage:
+```bash
+pnpm add @nutui/nutui-react
+```
+
+### Import Components
+
+```tsx
+import { Button } from '@nutui/nutui-react-taro'
+import '@nutui/nutui-react-taro/dist/style.css'
+```
+
+### Supported Platforms
+
+- WeChat Mini Program (weapp)
+- JD Mini Program (jd)
+- Alipay Mini Program (alipay)
+- H5
+- React Native (partial support)
+- Harmony OS (experimental)
+
+### Running Taro Demo
+
+```bash
+# H5
+pnpm dev:taro h5
+
+# WeChat Mini Program
+pnpm dev:taro weapp
+
+# JD Mini Program
+pnpm dev:taro jd
+```
+
+## Project Structure
+
+```
+nutui-react/
+├── src/
+│   ├── packages/              # Component source code
+│   │   ├── button/           # Each component has its own folder
+│   │   │   ├── button.tsx    # Component implementation
+│   │   │   ├── button.taro.tsx  # Taro version (if different)
+│   │   │   ├── button.scss   # Component styles
+│   │   │   ├── doc.md        # Component documentation
+│   │   │   ├── doc.taro.md   # Taro-specific docs
+│   │   │   └── demo*.tsx     # Demo examples
+│   │   ├── input/
+│   │   ├── dialog/
+│   │   └── ...               # 70+ components
+│   ├── hooks/                 # Custom React hooks
+│   ├── locales/              # i18n language files
+│   ├── styles/               # Global styles and themes
+│   ├── utils/                # Utility functions
+│   └── types/                # TypeScript type definitions
+├── packages/
+│   ├── nutui-auto-import/    # Auto-import plugin
+│   ├── nutui-taro-demo/      # Taro demo app
+│   └── nutui-templates/      # Project templates
+└── scripts/                  # Build and development scripts
+```
+
+## Development Workflow
+
+### Local Development (H5)
+
+```bash
+# Clone repository
+git clone https://github.com/jdf2e/nutui-react.git
+cd nutui-react
+
+# Install dependencies
+pnpm install
+
+# Start dev server
+pnpm run dev
+# Visit http://localhost:5173/react/
+```
+
+### Local Development (Taro)
+
+```bash
+pnpm install
+
+# Taro H5
+pnpm dev:taro h5
+
+# WeChat Mini Program
+pnpm dev:taro weapp
+```
+
+### Build
+
+```bash
+# Build H5 version
+pnpm run build
+
+# Build Taro version
+pnpm run build:taro
+
+# Build documentation site
+pnpm run build:site
+```
+
+### Testing
+
+```bash
+# Run tests
+pnpm test
+
+# Run tests with UI
+pnpm test:ui
+
+# E2E tests
+pnpm e2e:run:h5
+pnpm e2e:run:taro
+```
+
+### Create New Component
+
+```bash
+pnpm run add
+# Follow the prompts to create a new component
+```
+
+## Common Patterns & Best Practices
+
+### 1. Controlled vs Uncontrolled Components
+
+Most form components support both patterns:
+
+```tsx
+// Controlled (recommended for complex forms)
+const [value, setValue] = useState('')
+<Input value={value} onChange={setValue} />
+
+// Uncontrolled (simpler, use for simple cases)
+<Input defaultValue="initial" />
+```
+
+### 2. Using Refs
+
+```tsx
+import { useRef } from 'react'
+import { Input } from '@nutui/nutui-react'
+
+const inputRef = useRef(null)
+
+<Input ref={inputRef} />
+<Button onClick={() => inputRef.current?.focus()}>Focus Input</Button>
+```
+
+### 3. Imperative API (Dialog, Toast, etc.)
+
+```tsx
+// These components have both declarative and imperative APIs
+
+// Imperative (simpler for quick usage)
+Dialog.alert({ content: 'Alert!' })
+Toast.show('Message')
+
+// Declarative (more control)
+<Dialog visible={visible} onConfirm={...} />
+<Toast visible={visible} content="Message" />
+```
+
+### 4. Event Handling
+
+```tsx
+// Most components support standard React events
+<Button onClick={(e) => console.log('Clicked', e)} />
+<Input onChange={(value) => console.log('Changed', value)} />
+<Input onFocus={() => console.log('Focused')} />
+<Input onBlur={() => console.log('Blurred')} />
+```
+
+### 5. Styling Components
+
+```tsx
+// Use className and style props
+<Button className="my-button" style={{ marginTop: 20 }}>
+  Styled Button
+</Button>
+
+// Or use CSS variables for theme
+<Button style={{ '--nutui-button-border-radius': '20px' }}>
+  Custom Radius
+</Button>
+```
+
+## Common Use Cases & Patterns
+
+### 1. Login Form
+
+```tsx
+import { Form, Input, Button, Cell, Toast } from '@nutui/nutui-react'
+
+function LoginForm() {
+  const [form] = Form.useForm()
+  
+  const handleLogin = async (values: any) => {
+    try {
+      Toast.loading('Logging in...')
+      // API call
+      await login(values)
+      Toast.hide()
+      Toast.success('Login successful!')
+    } catch (error) {
+      Toast.hide()
+      Toast.fail('Login failed')
+    }
+  }
+  
+  return (
+    <Form
+      form={form}
+      onFinish={handleLogin}
+      footer={
+        <Button type="primary" nativeType="submit" block>
+          Login
+        </Button>
+      }
+    >
+      <Form.Item
+        name="username"
+        rules={[{ required: true, message: 'Please enter username' }]}
+      >
+        <Input placeholder="Username" clearable />
+      </Form.Item>
+      <Form.Item
+        name="password"
+        rules={[{ required: true, message: 'Please enter password' }]}
+      >
+        <Input type="password" placeholder="Password" clearable />
+      </Form.Item>
+    </Form>
+  )
+}
+```
+
+### 2. Settings Page
+
+```tsx
+import { Cell, Switch, Radio } from '@nutui/nutui-react'
+
+function SettingsPage() {
+  const [notifications, setNotifications] = useState(true)
+  const [language, setLanguage] = useState('zh-CN')
+  
+  return (
+    <div>
+      <Cell.Group title="General">
+        <Cell title="Language" extra={language} clickable />
+        <Cell title="Theme" extra="Light" clickable />
+      </Cell.Group>
+      
+      <Cell.Group title="Notifications">
+        <Cell title="Push Notifications">
+          <Switch checked={notifications} onChange={setNotifications} />
+        </Cell>
+        <Cell title="Email Notifications">
+          <Switch />
+        </Cell>
+      </Cell.Group>
+      
+      <Cell.Group title="About">
+        <Cell title="Version" extra="3.0.18" />
+        <Cell title="Privacy Policy" clickable />
+        <Cell title="Terms of Service" clickable />
+      </Cell.Group>
+    </div>
+  )
+}
+```
+
+### 3. Product List with Cart
+
+```tsx
+import { Cell, Button, Badge, InputNumber } from '@nutui/nutui-react'
+
+function ProductList() {
+  const [cart, setCart] = useState<Record<string, number>>({})
+  
+  const products = [
+    { id: '1', name: 'Product 1', price: 99 },
+    { id: '2', name: 'Product 2', price: 199 },
+  ]
+  
+  const addToCart = (productId: string) => {
+    setCart(prev => ({
+      ...prev,
+      [productId]: (prev[productId] || 0) + 1,
+    }))
+    Toast.success('Added to cart')
+  }
+  
+  return (
+    <div>
+      {products.map(product => (
+        <Cell
+          key={product.id}
+          title={product.name}
+          description={`¥${product.price}`}
+          extra={
+            <Button
+              size="small"
+              type="primary"
+              onClick={() => addToCart(product.id)}
+            >
+              Add to Cart
+            </Button>
+          }
+        />
+      ))}
+      
+      <Badge value={Object.keys(cart).length}>
+        <Button>Cart</Button>
+      </Badge>
+    </div>
+  )
+}
+```
+
+### 4. Image Upload
+
+```tsx
+import { Uploader, Toast } from '@nutui/nutui-react'
+
+function ImageUpload() {
+  const [fileList, setFileList] = useState<any[]>([])
+  
+  const upload = async (files: File[]) => {
+    const formData = new FormData()
+    formData.append('file', files[0])
+    
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await response.json()
+      return data
+    } catch (error) {
+      Toast.fail('Upload failed')
+      return null
+    }
+  }
+  
+  return (
+    <Uploader
+      value={fileList}
+      onChange={setFileList}
+      upload={upload}
+      maxCount={9}
+      multiple
+      previewType="picture"
+      onDelete={(file, index) => {
+        console.log('Deleted:', file)
+      }}
+    />
+  )
+}
+```
+
+### 5. Filter and Search
+
+```tsx
+import { SearchBar, Tabs, Cell } from '@nutui/nutui-react'
+
+function ProductSearch() {
+  const [keyword, setKeyword] = useState('')
+  const [category, setCategory] = useState('all')
+  const [results, setResults] = useState([])
+  
+  const search = (value: string) => {
+    setKeyword(value)
+    // Perform search
+    const filtered = products.filter(p =>
+      p.name.includes(value) &&
+      (category === 'all' || p.category === category)
+    )
+    setResults(filtered)
+  }
+  
+  return (
+    <div>
+      <SearchBar
+        value={keyword}
+        onChange={setKeyword}
+        onSearch={search}
+        placeholder="Search products"
+      />
+      
+      <Tabs value={category} onChange={setCategory}>
+        <Tabs.TabPane title="All" value="all" />
+        <Tabs.TabPane title="Electronics" value="electronics" />
+        <Tabs.TabPane title="Clothing" value="clothing" />
+      </Tabs>
+      
+      <Cell.Group>
+        {results.map(item => (
+          <Cell key={item.id} title={item.name} />
+        ))}
+      </Cell.Group>
+    </div>
+  )
+}
+```
+
+### 6. Confirmation Before Action
+
+```tsx
+import { Button, Dialog, Toast } from '@nutui/nutui-react'
+
+function DeleteButton({ itemId }: { itemId: string }) {
+  const handleDelete = () => {
+    Dialog.confirm({
+      title: 'Confirm Delete',
+      content: 'Are you sure you want to delete this item? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      onConfirm: async () => {
+        try {
+          Toast.loading('Deleting...')
+          await deleteItem(itemId)
+          Toast.hide()
+          Toast.success('Deleted successfully')
+        } catch (error) {
+          Toast.hide()
+          Toast.fail('Delete failed')
+        }
+      },
+    })
+  }
+  
+  return (
+    <Button type="danger" onClick={handleDelete}>
+      Delete
+    </Button>
+  )
+}
+```
+
+## Common Issues & Solutions
+
+### 1. Import Errors
+
+**Problem**: Cannot find module '@nutui/nutui-react'
+
+**Solution**: Make sure you've installed the package and imported correctly
+
+```bash
+pnpm add @nutui/nutui-react
+```
+
+```tsx
+import { Button } from '@nutui/nutui-react'
+import '@nutui/nutui-react/dist/style.css'
+```
+
+### 2. Styles Not Loading
+
+**Problem**: Components render but have no styles
+
+**Solution**: Import the CSS file in your entry point
+
+```tsx
+// In main.tsx or App.tsx
+import '@nutui/nutui-react/dist/style.css'
+```
+
+### 3. Type Errors
+
+**Problem**: TypeScript errors with component props
+
+**Solution**: NutUI is fully typed. Check the documentation for correct prop types.
+
+```tsx
+// Incorrect
+<Button type="custom">Button</Button>
+
+// Correct
+<Button type="primary">Button</Button>
+```
+
+### 4. Form Validation Not Working
+
+**Problem**: Form validation doesn't trigger
+
+**Solution**: Ensure Form.Item has a `name` prop and Button has `nativeType="submit"`
+
+```tsx
+<Form onFinish={onFinish}>
+  <Form.Item
+    name="username"  // Required for validation
+    rules={[{ required: true }]}
+  >
+    <Input />
+  </Form.Item>
+  <Button nativeType="submit" type="primary">Submit</Button>
+</Form>
+```
+
+### 5. Taro vs H5 Differences
+
+**Problem**: Component behaves differently in Taro
+
+**Solution**: Some components have Taro-specific implementations. Check doc.taro.md for differences. Import from different packages:
+
+```tsx
+// H5
+import { Button } from '@nutui/nutui-react'
+
+// Taro
+import { Button } from '@nutui/nutui-react-taro'
+```
+
+### 6. px to rem Conversion
+
+**Problem**: Need rem units for responsive design
+
+**Solution**: Configure postcss-pxtorem but exclude NutUI:
+
+```js
+// postcss.config.js
+module.exports = {
+  plugins: {
+    'postcss-pxtorem': {
+      rootValue: 37.5,
+      propList: ['*'],
+      selectorBlackList: ['nut-'] // Ignore NutUI classes
+    }
+  }
+}
+```
+
+### 7. Dialog/Toast Not Showing
+
+**Problem**: Imperative API (Dialog.confirm, Toast.show) not working
+
+**Solution**: Make sure you're calling them inside a function, not during render:
+
+```tsx
+// Wrong
+function MyComponent() {
+  Toast.show('Hello') // Don't call during render
+  return <div>Content</div>
+}
+
+// Correct
+function MyComponent() {
+  return (
+    <Button onClick={() => Toast.show('Hello')}>
+      Show Toast
+    </Button>
+  )
+}
+```
+
+### 8. Checkbox/Radio Group Value Not Updating
+
+**Problem**: Selected values not updating
+
+**Solution**: For Checkbox.Group, use array of values:
+
+```tsx
+// Correct
+<Checkbox.Group value={['1', '2']} onChange={setValues}>
+  <Checkbox value="1">Option 1</Checkbox>
+  <Checkbox value="2">Option 2</Checkbox>
+</Checkbox.Group>
+
+// For Radio.Group, use single value
+<Radio.Group value="1" onChange={setValue}>
+  <Radio value="1">Option 1</Radio>
+  <Radio value="2">Option 2</Radio>
+</Radio.Group>
+```
+
+## Best Practices & Tips
+
+### 1. Component Import Strategy
+
+**For Small Projects (< 10 components)**
+- Use full import for simplicity
+```tsx
+import '@nutui/nutui-react/dist/style.css'
+import { Button, Input, Cell } from '@nutui/nutui-react'
+```
+
+**For Large Projects**
+- Use automatic on-demand import with build plugins
+- Reduces bundle size significantly
+
+### 2. Form Handling
+
+**Prefer Controlled Components for Complex Forms**
+```tsx
+const [form] = Form.useForm()
+
+// Access form values
+const values = form.getFieldsValue()
+
+// Set form values
+form.setFieldsValue({ username: 'john' })
+
+// Validate manually
+await form.submit()
+```
+
+**Use Async Validators for Server-Side Validation**
+```tsx
+<Form.Item
+  name="username"
+  rules={[{
+    validator: async (rule, value) => {
+      const exists = await checkUsernameExists(value)
+      if (exists) {
+        return Promise.reject('Username already exists')
+      }
+      return Promise.resolve()
+    }
+  }]}
+>
+  <Input />
+</Form.Item>
+```
+
+### 3. Performance Optimization
+
+**Avoid Unnecessary Re-renders**
+```tsx
+// Use React.memo for list items
+const ProductItem = React.memo(({ product }) => (
+  <Cell title={product.name} description={product.price} />
+))
+
+// Use useCallback for handlers
+const handleClick = useCallback(() => {
+  console.log('Clicked')
+}, [])
+```
+
+**Lazy Load Heavy Components**
+```tsx
+const ImagePreview = lazy(() => import('@nutui/nutui-react').then(m => ({ default: m.ImagePreview })))
+```
+
+**Virtual List for Long Lists**
+```tsx
+import { VirtualList } from '@nutui/nutui-react'
+
+<VirtualList
+  itemHeight={50}
+  dataSource={largeArray}
+  itemRender={(data) => <Cell title={data.title} />}
+/>
+```
+
+### 4. Mobile Touch Optimization
+
+**Prevent Default Scroll Behavior When Needed**
+```tsx
+<Swiper
+  style={{ touchAction: 'pan-y' }} // Allow vertical scroll
+  onTouchStart={(e) => e.preventDefault()} // Prevent horizontal scroll
+>
+  ...
+</Swiper>
+```
+
+**Use Passive Event Listeners for Better Scroll Performance**
+```tsx
+useEffect(() => {
+  const handler = (e) => { /* ... */ }
+  window.addEventListener('scroll', handler, { passive: true })
+  return () => window.removeEventListener('scroll', handler)
+}, [])
+```
+
+### 5. Theme Customization Best Practices
+
+**Use CSS Variables for Dynamic Themes**
+```tsx
+<ConfigProvider
+  theme={{
+    nutuiColorPrimary: isDark ? '#409EFF' : '#fa2c19',
+    nutuiColorPrimaryStop1: isDark ? '#337ecc' : '#c82519',
+  }}
+>
+  <App />
+</ConfigProvider>
+```
+
+**Or use CSS for global customization**
+```css
+:root {
+  --nutui-color-primary: #1890ff;
+  --nutui-color-primary-stop-1: #096dd9;
+  --nutui-button-border-radius: 20px;
+}
+```
+
+### 6. Error Handling Patterns
+
+**Global Error Boundary**
+```tsx
+class ErrorBoundary extends React.Component {
+  state = { hasError: false }
+  
+  static getDerivedStateFromError(error) {
+    return { hasError: true }
+  }
+  
+  render() {
+    if (this.state.hasError) {
+      return <Empty description="Something went wrong" />
+    }
+    return this.props.children
+  }
+}
+```
+
+**Async Error Handling**
+```tsx
+const handleSubmit = async (values) => {
+  try {
+    Toast.loading('Submitting...')
+    await api.submit(values)
+    Toast.hide()
+    Toast.success('Success!')
+    navigate('/success')
+  } catch (error) {
+    Toast.hide()
+    if (error.code === 'NETWORK_ERROR') {
+      Toast.fail('Network error, please try again')
+    } else {
+      Toast.fail(error.message || 'Submit failed')
+    }
+  }
+}
+```
+
+### 7. Accessibility (a11y)
+
+**Add ARIA Labels**
+```tsx
+<Button aria-label="Close dialog" onClick={onClose}>
+  <Close />
+</Button>
+
+<Input
+  placeholder="Email"
+  aria-label="Email address"
+  aria-required="true"
+/>
+```
+
+**Keyboard Navigation**
+```tsx
+<Cell
+  title="Settings"
+  clickable
+  onClick={handleClick}
+  tabIndex={0}
+  onKeyPress={(e) => {
+    if (e.key === 'Enter') handleClick()
+  }}
+/>
+```
+
+### 8. Testing Components
+
+**Unit Test with Testing Library**
+```tsx
+import { render, fireEvent } from '@testing-library/react'
+import { Button } from '@nutui/nutui-react'
+
+test('button click', () => {
+  const handleClick = jest.fn()
+  const { getByText } = render(
+    <Button onClick={handleClick}>Click me</Button>
+  )
+  
+  fireEvent.click(getByText('Click me'))
+  expect(handleClick).toHaveBeenCalledTimes(1)
+})
+```
+
+### 9. TypeScript Tips
+
+**Strict Type Checking with Form**
+```tsx
+interface FormValues {
+  username: string
+  email: string
+  age: number
+}
+
+const onFinish = (values: FormValues) => {
+  // values is fully typed
+  console.log(values.username)
+}
+
+<Form<FormValues> onFinish={onFinish}>
+  <Form.Item name="username">
+    <Input />
+  </Form.Item>
+</Form>
+```
+
+**Generic Components**
+```tsx
+interface ListItem {
+  id: string
+  name: string
+}
+
+function ItemList<T extends ListItem>({ items }: { items: T[] }) {
+  return (
+    <Cell.Group>
+      {items.map(item => (
+        <Cell key={item.id} title={item.name} />
+      ))}
+    </Cell.Group>
+  )
+}
+```
+
+### 10. State Management Integration
+
+**With Redux**
+```tsx
+import { useSelector, useDispatch } from 'react-redux'
+
+function CartButton() {
+  const cartCount = useSelector(state => state.cart.count)
+  const dispatch = useDispatch()
+  
+  return (
+    <Badge value={cartCount}>
+      <Button onClick={() => dispatch({ type: 'OPEN_CART' })}>
+        Cart
+      </Button>
+    </Badge>
+  )
+}
+```
+
+**With Zustand**
+```tsx
+import { create } from 'zustand'
+
+const useStore = create((set) => ({
+  count: 0,
+  increment: () => set(state => ({ count: state.count + 1 })),
+}))
+
+function Counter() {
+  const { count, increment } = useStore()
+  return (
+    <Cell title="Count" extra={count}>
+      <Button onClick={increment}>+</Button>
+    </Cell>
+  )
+}
+```
+
+## Additional Resources
+
+- **Official Documentation**: https://nutui.jd.com/react/
+- **GitHub Repository**: https://github.com/jdf2e/nutui-react
+- **Issue Tracker**: https://github.com/jdf2e/nutui-react/issues
+- **Discussions Forum**: https://github.com/jdf2e/nutui-react/discussions
+- **Changelog**: https://github.com/jdf2e/nutui-react/releases
+- **NPM Package**: https://www.npmjs.com/package/@nutui/nutui-react
+- **Component Demo**: https://nutui.jd.com/react/#/zh-CN/component/button
+- **Sketch Design Resources**: Available in documentation
+- **Issue Helper**: https://nutui.jd.com/nutui-issue-helper/
+
+## Contributing
+
+NutUI welcomes contributions from the community! Ways to contribute:
+
+- 🐛 **Bug Fixes** - Report or fix bugs
+- ✨ **New Components** - Propose or implement new components
+- 📖 **Documentation** - Improve docs and examples
+- 🌍 **Internationalization** - Add or improve translations
+- 🎨 **Theme Customization** - Create custom themes
+- 📱 **Platform Adaptation** - Improve Taro/mini-program support
+- ✅ **Unit Tests** - Increase test coverage
+- 🔧 **Build Tools** - Improve build process and tooling
+
+See [Contributing Guide](https://github.com/jdf2e/nutui-react/discussions/348) for details.
+
+## Community & Support
+
+### Get Help
+
+- 💬 **GitHub Discussions** - Ask questions and share ideas
+- 🐛 **GitHub Issues** - Report bugs and request features
+- 📖 **Documentation** - Comprehensive guides and API reference
+
+### Stay Updated
+
+- ⭐ **Star on GitHub** - Show your support
+- 📢 **Watch Releases** - Get notified of new versions
+- 🐦 **Follow JD FED** - Latest news and updates
+
+---
+
+**Last Updated**: 2025-11-29
+**Document Version**: 2.0
+**NutUI React Version**: 3.0.18
+**Maintained by**: JDCFE (JD.com Front-End Team)
+
+---
+
+## Quick Start Checklist
+
+When helping users with NutUI React, verify these steps:
+
+- [ ] Package installed: `@nutui/nutui-react`
+- [ ] Styles imported: `import '@nutui/nutui-react/dist/style.css'`
+- [ ] Components imported: `import { Button } from '@nutui/nutui-react'`
+- [ ] TypeScript configured (if using TS)
+- [ ] Build tool configured for on-demand import (optional)
+- [ ] Theme customization (if needed)
+- [ ] For Taro: Use `@nutui/nutui-react-taro` imports
+
+## AI Assistant Notes
+
+When providing assistance:
+
+1. **Always check the component category** - Different components have different patterns
+2. **Verify controlled vs uncontrolled** - Many components support both patterns
+3. **Check for imperative API** - Dialog, Toast, etc. have both declarative and imperative APIs
+4. **Consider mobile context** - These are mobile components, touch interactions are important
+5. **TypeScript types** - All components are fully typed, provide accurate type information
+6. **Taro compatibility** - Some features may differ between H5 and Taro versions
+7. **Version compatibility** - This guide is for v3.x, major differences from v2.x
+
+## End of Guide
+
+#### 11. Swiper - 轮播组件
+
+**Import**
+```tsx
+import { Swiper } from '@nutui/nutui-react'
+```
+
+**Complete Example**
+```tsx
+import React, { useState, useEffect } from 'react'
+import { Swiper } from '@nutui/nutui-react'
+
+function SwiperDemo() {
+  const list = [
+    'https://storage.360buyimg.com/jdc-article/NutUItaro34.jpg',
+    'https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg',
+    'https://storage.360buyimg.com/jdc-article/welcomenutui.jpg',
+    'https://storage.360buyimg.com/jdc-article/fristfabu.jpg',
+  ]
+
+  return (
+    <div>
+      {/* Basic Swiper */}
+      <Swiper
+        autoPlay
+        loop
+        indicator
+        style={{ height: '150px' }}
+      >
+        {list.map((item, index) => (
+          <Swiper.Item key={item}>
+            <img
+              src={item}
+              alt={`slide-${index}`}
+              style={{ width: '100%', height: '100%' }}
+              draggable={false}
+            />
+          </Swiper.Item>
+        ))}
+      </Swiper>
+
+      {/* Custom Slide Size */}
+      <Swiper
+        loop
+        slideSize={300}
+        indicator
+        style={{ height: '150px' }}
+      >
+        {list.map((item, index) => (
+          <Swiper.Item key={item}>
+            <img src={item} draggable={false} />
+          </Swiper.Item>
+        ))}
+      </Swiper>
+
+      {/* Multiple Slides Per View */}
+      <Swiper
+        loop
+        slidesPerView={2}
+        spaceBetween={10}
+        indicator
+      >
+        {list.map((item, index) => (
+          <Swiper.Item key={item}>
+            <img src={item} draggable={false} />
+          </Swiper.Item>
+        ))}
+      </Swiper>
+
+      {/* Focus Effect */}
+      <Swiper
+        loop
+        slideSize={300}
+        effect={{ name: 'focus', scale: 0.9 }}
+      >
+        {list.map((item) => (
+          <Swiper.Item key={item}>
+            <img src={item} draggable={false} />
+          </Swiper.Item>
+        ))}
+      </Swiper>
+
+      {/* Vertical Swiper */}
+      <Swiper
+        direction="vertical"
+        autoPlay
+        loop
+        indicator
+        style={{ height: '300px' }}
+      >
+        {list.map((item) => (
+          <Swiper.Item key={item}>
+            <img src={item} draggable={false} />
+          </Swiper.Item>
+        ))}
+      </Swiper>
+
+      {/* Custom Indicator */}
+      <Swiper
+        autoPlay
+        loop
+        indicator
+        style={{
+          '--nutui-indicator-color': '#426543',
+          '--nutui-indicator-dot-color': '#426ddd',
+        }}
+      >
+        {list.map((item) => (
+          <Swiper.Item key={item}>
+            <img src={item} draggable={false} />
+          </Swiper.Item>
+        ))}
+      </Swiper>
+
+      {/* With onChange Event */}
+      <SwiperWithChange />
+
+      {/* Controlled Swiper */}
+      <ControlledSwiper />
+
+      {/* Async Loading */}
+      <AsyncSwiper />
+
+      {/* Without Loop */}
+      <Swiper indicator>
+        {list.map((item) => (
+          <Swiper.Item key={item}>
+            <img src={item} draggable={false} />
+          </Swiper.Item>
+        ))}
+      </Swiper>
+
+      {/* Custom Auto Play Duration */}
+      <Swiper autoPlay={5000} loop indicator>
+        {list.map((item) => (
+          <Swiper.Item key={item}>
+            <img src={item} draggable={false} />
+          </Swiper.Item>
+        ))}
+      </Swiper>
+    </div>
+  )
+}
+
+// Swiper with Change Event
+function SwiperWithChange() {
+  const [current, setCurrent] = useState(0)
+  const list = ['Slide 1', 'Slide 2', 'Slide 3']
+
+  return (
+    <div>
+      <div>Current: {current + 1} / {list.length}</div>
+      <Swiper
+        indicator
+        onChange={(index) => {
+          console.log('Changed to:', index)
+          setCurrent(index)
+        }}
+      >
+        {list.map((item) => (
+          <Swiper.Item key={item}>
+            <div style={{
+              textAlign: 'center',
+              padding: '50px',
+              backgroundColor: '#f5f5f5',
+            }}>
+              {item}
+            </div>
+          </Swiper.Item>
+        ))}
+      </Swiper>
+    </div>
+  )
+}
+
+// Controlled Swiper
+function ControlledSwiper() {
+  const [current, setCurrent] = useState(0)
+  const list = ['Slide 1', 'Slide 2', 'Slide 3']
+
+  return (
+    <div>
+      <Button onClick={() => setCurrent((current - 1 + list.length) % list.length)}>
+        Prev
+      </Button>
+      <Button onClick={() => setCurrent((current + 1) % list.length)}>
+        Next
+      </Button>
+      
+      <Swiper
+        value={current}
+        onChange={setCurrent}
+        indicator
+      >
+        {list.map((item) => (
+          <Swiper.Item key={item}>
+            <div style={{ textAlign: 'center', padding: '50px' }}>
+              {item}
+            </div>
+          </Swiper.Item>
+        ))}
+      </Swiper>
+    </div>
+  )
+}
+
+// Async Loading
+function AsyncSwiper() {
+  const [list, setList] = useState<string[]>([])
+
+  useEffect(() => {
+    // Simulate async data loading
+    setTimeout(() => {
+      setList([
+        'https://storage.360buyimg.com/jdc-article/NutUItaro34.jpg',
+        'https://storage.360buyimg.com/jdc-article/NutUItaro2.jpg',
+      ])
+    }, 1000)
+  }, [])
+
+  if (list.length === 0) {
+    return <div>Loading...</div>
+  }
+
+  return (
+    <Swiper autoPlay loop indicator>
+      {list.map((item) => (
+        <Swiper.Item key={item}>
+          <img src={item} draggable={false} />
+        </Swiper.Item>
+      ))}
+    </Swiper>
+  )
+}
+```
+
+**Key Props**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| value | `number` | `0` | Current slide index (controlled) |
+| defaultValue | `number` | `0` | Default slide index |
+| autoPlay | `boolean \| number` | `false` | Auto play (true or duration in ms) |
+| loop | `boolean` | `false` | Enable loop |
+| direction | `'horizontal' \| 'vertical'` | `'horizontal'` | Swipe direction |
+| indicator | `boolean` | `false` | Show indicator |
+| slideSize | `number` | - | Slide width/height |
+| slidesPerView | `number` | `1` | Number of slides per view |
+| spaceBetween | `number` | `0` | Space between slides |
+| effect | `{ name: 'focus', scale: number }` | - | Transition effect |
+| onChange | `(index: number) => void` | - | Slide change handler |
+
+---
+
+## Quick Reference Card
+
+### Most Commonly Used Components
+
+```tsx
+// 1. Button - 按钮
+<Button type="primary" size="large" onClick={handleClick}>
+  Submit
+</Button>
+<Button loading>Loading...</Button>
+<Button icon={<Star />}>With Icon</Button>
+
+// 2. Input - 输入框
+<Input
+  value={text}
+  onChange={setText}
+  placeholder="Enter text"
+  clearable
+  maxLength={50}
+/>
+
+// 3. Form - 表单
+const [form] = Form.useForm()
+<Form form={form} onFinish={onFinish} onFinishFailed={onFail}>
+  <Form.Item
+    label="Username"
+    name="username"
+    rules={[{ required: true, message: 'Required' }]}
+  >
+    <Input placeholder="Username" />
+  </Form.Item>
+  <Form.Item
+    label="Email"
+    name="email"
+    rules={[{ type: 'email', message: 'Invalid email' }]}
+  >
+    <Input type="email" placeholder="Email" />
+  </Form.Item>
+</Form>
+
+// 4. Cell - 单元格
+<Cell.Group title="Settings">
+  <Cell title="Username" extra="john_doe" clickable />
+  <Cell title="Email" extra="john@example.com" />
+  <Cell title="Notifications">
+    <Switch />
+  </Cell>
+</Cell.Group>
+
+// 5. Checkbox - 复选框
+<Checkbox.Group value={values} onChange={setValues}>
+  <Checkbox value="1">Option 1</Checkbox>
+  <Checkbox value="2">Option 2</Checkbox>
+  <Checkbox value="3">Option 3</Checkbox>
+</Checkbox.Group>
+
+// 6. Radio - 单选框
+<Radio.Group value={value} onChange={setValue}>
+  <Radio value="1">Option 1</Radio>
+  <Radio value="2">Option 2</Radio>
+</Radio.Group>
+
+// 7. Picker - 选择器
+const [visible, setVisible] = useState(false)
+<Cell title="Select" description={desc} onClick={() => setVisible(true)} />
+<Picker
+  visible={visible}
+  options={options}
+  onConfirm={(selectedOptions) => {
+    setDesc(selectedOptions.map(o => o.label).join(' '))
+    setVisible(false)
+  }}
+  onClose={() => setVisible(false)}
+/>
+
+// 8. Dialog - 对话框
+Dialog.confirm({
+  title: 'Confirm',
+  content: 'Are you sure?',
+  onConfirm: () => console.log('Confirmed'),
+  onCancel: () => console.log('Cancelled'),
+})
+
+// Or declarative
+<Dialog
+  visible={visible}
+  title="Title"
+  onConfirm={() => setVisible(false)}
+  onCancel={() => setVisible(false)}
+>
+  Content
+</Dialog>
+
+// 9. Toast - 轻提示
+Toast.show('Basic message')
+Toast.success('Success!')
+Toast.fail('Failed!')
+Toast.loading('Loading...')
+Toast.warn('Warning!')
+
+// 10. Popup - 弹出层
+<Popup
+  visible={visible}
+  position="bottom" // top, bottom, left, right, center
+  round
+  closeable
+  onClose={() => setVisible(false)}
+>
+  <div style={{ padding: '40px' }}>Content</div>
+</Popup>
+
+// 11. Tabs - 标签页
+<Tabs value={tab} onChange={setTab}>
+  <Tabs.TabPane title="Tab 1">Content 1</Tabs.TabPane>
+  <Tabs.TabPane title="Tab 2">Content 2</Tabs.TabPane>
+  <Tabs.TabPane title="Tab 3">Content 3</Tabs.TabPane>
+</Tabs>
+
+// 12. Swiper - 轮播
+<Swiper autoPlay loop indicator style={{ height: '150px' }}>
+  <Swiper.Item>
+    <img src="image1.jpg" draggable={false} />
+  </Swiper.Item>
+  <Swiper.Item>
+    <img src="image2.jpg" draggable={false} />
+  </Swiper.Item>
+</Swiper>
+
+// 13. Switch - 开关
+<Switch checked={checked} onChange={setChecked} />
+
+// 14. DatePicker - 日期选择器
+<DatePicker
+  visible={visible}
+  type="date" // date, datetime, time, year-month, month-day
+  defaultValue={new Date()}
+  onConfirm={(values, selectedValue) => {
+    console.log(selectedValue)
+    setVisible(false)
+  }}
+/>
+
+// 15. ActionSheet - 动作面板
+<ActionSheet
+  visible={visible}
+  options={[
+    { name: 'Option 1', onClick: () => {} },
+    { name: 'Option 2', onClick: () => {} },
+    { name: 'Delete', danger: true, onClick: () => {} },
+  ]}
+  onCancel={() => setVisible(false)}
+/>
+
+// 16. Badge - 徽标
+<Badge value={99}>
+  <Button>Messages</Button>
+</Badge>
+<Badge dot>
+  <Button>Notifications</Button>
+</Badge>
+
+// 17. Loading - 加载
+<Loading />
+<Loading type="spinner" />
+<Loading direction="vertical">Loading...</Loading>
+
+// 18. Empty - 空状态
+<Empty description="No data" />
+<Empty image={<CustomImage />} description="Custom empty" />
+
+// 19. Steps - 步骤条
+<Steps current={1}>
+  <Steps.Step title="Step 1" description="Completed" />
+  <Steps.Step title="Step 2" description="In Progress" />
+  <Steps.Step title="Step 3" description="Waiting" />
+</Steps>
+
+// 20. Progress - 进度条
+<Progress percentage={50} />
+<Progress percentage={80} status="active" />
+<Progress percentage={100} status="success" />
+```
+
+---
+
+**Last Updated**: 2025-11-29
+**Version**: 3.0.18
+**Maintained by**: JDCFE (JD.com Front-End Team)
+
